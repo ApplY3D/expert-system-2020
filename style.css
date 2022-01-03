@@ -1,0 +1,37 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  padding: 1rem;
+}
+
+.alternatives {
+  display: flex;
+}
+
+.alternatives p {
+  margin: 3px;
+}
+
+.alternatives b {
+  margin: 3px;
+}
+
+.alternative {
+  margin: 1rem;
+}
+
+.alternative span {
+  color: #333;
+  font-weight: bold;
+}
+
+.select-item {
+  margin: 3px;
+  margin-left: 1rem;
+}
+
+textarea {
+  font-size: 1rem;
+}
