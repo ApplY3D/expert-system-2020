@@ -114,7 +114,13 @@ function closeCriteriasModal() {
 }
 
 function saveCriteriasModal() {
-  const newCriterias = parseCriterias();
+  const modal = document.getElementById('modal-criterias');
+  const value = modal.querySelector('textarea').value.trim();
+  if (!value) {
+    return throwError('Criterias field is empty');
+  }
+
+  const newCriterias = parseCriterias(value);
   criterias = newCriterias;
   document.getElementById('modal-criterias').remove();
   render();
@@ -130,7 +136,7 @@ function changeCriteriasBtnClick() {
   const modal = document.createElement('div');
   modal.id = 'modal-criterias';
 
-  criteriasString = stringifyCriterias();
+  criteriasString = stringifyCriterias(criterias);
   modal.innerHTML = `
     <b>Change criterias: </b>
     <br>
@@ -141,12 +147,7 @@ function changeCriteriasBtnClick() {
   document.body.insertAdjacentElement('beforeend', modal);
 }
 
-function parseCriterias() {
-  const modal = document.getElementById('modal-criterias');
-  const value = modal.querySelector('textarea').value.trim();
-  if (!value) {
-    return throwError('Criterias field is empty');
-  }
+function parseCriterias(value) {
   let criteriasArray = value.split(';\n\n');
   criteriasArray = criteriasArray.map((criteriaString) => {
     return criteriaString.split(':\n');
@@ -160,7 +161,7 @@ function parseCriterias() {
   return criteriasObject;
 }
 
-function stringifyCriterias() {
+function stringifyCriterias(criterias) {
   return (
     criterias
       .map((criteria) => {
@@ -181,7 +182,7 @@ function changeAlternativesBtnClick() {
   const modal = document.createElement('div');
   modal.id = 'modal-alternatives';
 
-  alternativesString = stringifyAlternatives();
+  alternativesString = stringifyAlternatives(alternatives);
   modal.innerHTML = `
     <b>Change alternatives: </b>
     <br>
@@ -197,18 +198,19 @@ function closeAlternativesModal() {
 }
 
 function saveAlternativesModal() {
-  const newAlternatives = parseAlternatives();
-  alternatives = newAlternatives;
-  document.getElementById('modal-alternatives').remove();
-  render();
-}
-
-function parseAlternatives() {
   const modal = document.getElementById('modal-alternatives');
   const value = modal.querySelector('textarea').value.trim();
   if (!value) {
     return throwError('Alternatives field is empty');
   }
+
+  const newAlternatives = parseAlternatives(value);
+  alternatives = newAlternatives;
+  document.getElementById('modal-alternatives').remove();
+  render();
+}
+
+function parseAlternatives(value) {
   let alternativesArray = value.split(';\n\n');
   alternativesArray = alternativesArray.map((alterString) => {
     return alterString.split(':\n');
@@ -227,7 +229,7 @@ function parseAlternatives() {
   return alternativesObject;
 }
 
-function stringifyAlternatives() {
+function stringifyAlternatives(alternatives) {
   return (
     alternatives
       .map((alter) => {
