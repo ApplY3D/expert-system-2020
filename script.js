@@ -48,13 +48,13 @@ let alternatives = [
   },
 ];
 
-// Сравнивает объект, который мы выбрали со всеми и делает отчет
+// Compares chosen criterias with all alternatives
 function checkAltersWithSelectedCriterias(checkObject) {
   let result = [];
   alternatives.forEach((alter, i) => {
     let currentIterationInformation = {};
-    let similarities = 0; // сходства
-    let allVariants = criterias.length; // все поля в альтернативе кроме имени
+    let similarities = 0;
+    let allVariants = criterias.length; // all fields except alternativeName
 
     for (let prop in checkObject) {
       if (checkObject[prop] === alter[prop]) {
@@ -75,14 +75,14 @@ function checkAltersWithSelectedCriterias(checkObject) {
   return result;
 }
 
-// Сортирует массив объектов по значению сходства
+// Sort alters array by similarity
 function sortAlters(alters) {
   return alters.sort((a, b) => {
     return b.persetage - a.persetage;
   });
 }
 
-// Получает данные из всех select и создает объект с этими свойствами
+// Get data from all selects and create object with this properties
 function getValues() {
   const allSelectsNodes = document.querySelectorAll('select');
   const allSelects = Array.prototype.slice.call(allSelectsNodes);
@@ -101,13 +101,13 @@ function checkBtnClick() {
 
 function addBtnClick() {
   let checkObject = getValues();
-  const alternativeName = prompt(`Как хотите назвать альтернативу?`);
+  const alternativeName = prompt(`Write down alternative name?`);
   checkObject = { alternativeName, ...checkObject };
   alternatives.push(checkObject);
   renderAllAlternatives();
 }
 
-//!! --------------- КРИТЕРИИ
+//!! --------------- CRITERIAS
 
 function closeCriteriasModal() {
   document.getElementById('modal-criterias').remove();
@@ -120,7 +120,7 @@ function saveCriteriasModal() {
   render();
 }
 
-// Открыть модальное окно с настройкой критериев
+// Criterias settings modal
 function changeCriteriasBtnClick() {
   if (!document.getElementById('modal-criterias')) {
   } else {
@@ -132,21 +132,20 @@ function changeCriteriasBtnClick() {
 
   criteriasString = stringifyCriterias();
   modal.innerHTML = `
-    <b>Изменить критерии: </b>
+    <b>Change criterias: </b>
     <br>
-    <button onClick="closeCriteriasModal()">Закрыть</button>
+    <button onClick="closeCriteriasModal()">Close</button>
     <textarea rows="10" cols="40">${criteriasString}</textarea>
-    <button onClick="saveCriteriasModal()">Сохранить</button>
+    <button onClick="saveCriteriasModal()">Save</button>
   `;
   document.body.insertAdjacentElement('beforeend', modal);
 }
 
-// Получаем критерии из строки
 function parseCriterias() {
   const modal = document.getElementById('modal-criterias');
   const value = modal.querySelector('textarea').value.trim();
   if (!value) {
-    return throwError('Нет значений критериев');
+    return throwError('Criterias field is empty');
   }
   let criteriasArray = value.split(';\n\n');
   criteriasArray = criteriasArray.map((criteriaString) => {
@@ -161,19 +160,18 @@ function parseCriterias() {
   return criteriasObject;
 }
 
-// Преобразование критериев в строку
 function stringifyCriterias() {
   return (
     criterias
       .map((criteria) => {
         return `${criteria.value}:\n${criteria.options.join(', ')};\n\n`;
       })
-      .join('') + 'конец.'
-  ).replace(';\n\nконец.', '');
+      .join('') + 'end.'
+  ).replace(';\n\nend.', '');
 }
 
-//!! --------------- АЛЬТЕРНАТИВЫ
-// Открыть модальное окно с настройкой альтернатив
+//!! --------------- ALTERNATIVES
+// Alternatives settings modal
 function changeAlternativesBtnClick() {
   if (!document.getElementById('modal-alternatives')) {
   } else {
@@ -185,11 +183,11 @@ function changeAlternativesBtnClick() {
 
   alternativesString = stringifyAlternatives();
   modal.innerHTML = `
-    <b>Изменить альтернативы: </b>
+    <b>Change alternatives: </b>
     <br>
-    <button onClick="closeAlternativesModal()">Закрыть</button>
+    <button onClick="closeAlternativesModal()">Close</button>
     <textarea rows="10" cols="40">${alternativesString}</textarea>
-    <button onClick="saveAlternativesModal()">Сохранить</button>
+    <button onClick="saveAlternativesModal()">Save</button>
   `;
   document.body.insertAdjacentElement('beforeend', modal);
 }
@@ -205,12 +203,11 @@ function saveAlternativesModal() {
   render();
 }
 
-// Получаем альтернативы из строки
 function parseAlternatives() {
   const modal = document.getElementById('modal-alternatives');
   const value = modal.querySelector('textarea').value.trim();
   if (!value) {
-    return throwError('Нет значений альтернатив');
+    return throwError('Alternatives field is empty');
   }
   let alternativesArray = value.split(';\n\n');
   alternativesArray = alternativesArray.map((alterString) => {
@@ -230,7 +227,6 @@ function parseAlternatives() {
   return alternativesObject;
 }
 
-// Преобразование альтернатив в строку
 function stringifyAlternatives() {
   return (
     alternatives
@@ -243,8 +239,8 @@ function stringifyAlternatives() {
         return `${alter.alternativeName}:\n${alterValues}\n`;
         // return `${criteria.value}:\n${criteria.options.join(", ")};\n\n`;
       })
-      .join('') + 'конец.'
-  ).replace(';\n\nконец.', '');
+      .join('') + 'end.'
+  ).replace(';\n\nend.', '');
 }
 
 // function renderFoundAlters(arrayOfAlters) {
@@ -258,10 +254,9 @@ function stringifyAlternatives() {
 //   }
 // }
 
-// Отрисовывает все варианты выборов
-function renderOptions() {
-  // Очищаем в случае ререндера
-  selectsDiv.innerHTML = '<b>Критерии: </b>';
+function renderCriterias() {
+  // Clear if rerender
+  selectsDiv.innerHTML = '<b>Criterias: </b>';
   for (let i = 0; i < criterias.length; i++) {
     let value = criterias[i].value;
     let options = criterias[i].options;
@@ -270,7 +265,7 @@ function renderOptions() {
     appendEl.innerHTML = `
         <label>${value}</label>
         <select name="${value}">
-            <option value="Не указано">Не указано</option>
+            <option value="No value">No value</option>
             ${options
               .map((option) => `<option value="${option}">${option}</option>`)
               .join('')}
@@ -280,7 +275,6 @@ function renderOptions() {
   }
 }
 
-// Отрисовка всех возможных альтернатив
 function renderAllAlternatives() {
   let allAlternatives = alternatives
     .map((alter) => {
@@ -296,7 +290,7 @@ function renderAllAlternatives() {
     })
     .join('');
   alternativesDiv.innerHTML =
-    '<b>Альтернативы: </b>' +
+    '<b>Alternatives: </b>' +
     '<div class="alternatives">' +
     allAlternatives +
     '</div>';
@@ -309,11 +303,11 @@ function throwError(error) {
 
 function outputResults(res) {
   console.log(res);
-  alert('Проверьте консоль');
+  alert('Check browser console');
 }
 
 function render() {
-  renderOptions();
+  renderCriterias();
   renderAllAlternatives();
 }
 
